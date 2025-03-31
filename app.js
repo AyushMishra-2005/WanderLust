@@ -19,6 +19,7 @@ const MongoStore = require('connect-mongo');
 const listingsRouter = require("./routes/listing.js");
 const reviewsRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
+const { connect } = require("http2");
 
 const app = express();
 const port = 8080;
@@ -37,9 +38,9 @@ app.use(express.static(path.join(__dirname, "public")));
 const store = MongoStore.create({
 	mongoUrl : dburl,
 	crypto : {
-		secret : "mysupersecretcode"
+		secret : process.env.SECRET
 	},
-	touchAfter : 24*3600,
+	touchAfter : 24*3600,	
 });
 
 store.on("error", () => {
@@ -48,7 +49,7 @@ store.on("error", () => {
 
 const sessionOptions = {
 	store : store,
-	secret : "mysupersecretcode",
+	secret : process.env.SECRET,
 	resave : false,
 	saveUninitialized : true,
 	cookie: {
@@ -68,7 +69,6 @@ main()
 	}).catch((err) => console.log(err));
 
 async function main() {
-	// await mongoose.connect(MONGO_URL);
 	await mongoose.connect(dburl);
 };
 
@@ -84,6 +84,10 @@ app.use((req, res, next) => {
 	res.locals.error = req.flash("error");
 	res.locals.currUser = req.user;
 	next();
+});
+
+app.get('/', (req, res) => {
+	res.redirect("/listings");
 });
 
 // connecting to listing route
