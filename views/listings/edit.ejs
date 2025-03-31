@@ -1,0 +1,96 @@
+<% layout("/layouts/boilerplate") %>
+
+  <body>
+    <%- include("../includes/flash.ejs") %>
+    <div class="row">
+      <div class="col col-8 offset-2">
+        <h3>Edit Your Listing</h3>
+        <form action="/listings/<%= listElement._id %>?_method=PUT" 
+          method="POST" 
+          novalidate 
+          class="needs-validation"
+          enctype="multipart/form-data"
+        >
+          <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" value="<%= listElement.title %>" name="listing[title]" class="form-control" required>
+            <div class="valid-feedback">
+              <p>Title looks good!</p>
+            </div>
+            <div class="invalid-feedback">
+              <p>Please enter title!</p>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea name="listing[description]" id="" class="form-control"
+              required><%= listElement.description %></textarea>
+            <div class="valid-feedback">
+              <p>Description looks good!</p>
+            </div>
+            <div class="invalid-feedback">
+              <p>Please enter description!</p>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            Original Listing Image <br>
+            <img src="<%= originalImageUrl %>" alt="">
+          </div>
+
+          <div class="mb-3">
+            <label for="image" class="form-label">Upload New Image</label>
+            <input name="listing[image]" class="form-control" type="file">
+          </div>
+
+          <div class="mb-3">
+            <label for="image" class="form-label">Location Category</label>
+            <select class="form-select" name="listing[category]" aria-label="Default select example">
+              <option selected value="<%= listElement.category %>"><%= listElement.category %></option>
+              <option value="Rooms">Rooms</option>
+              <option value="Iconic Cities">Iconic Cities</option>
+              <option value="Mountain">Mountain</option>
+              <option value="Castle">Castle</option>
+              <option value="Amazing Pools">Amazing Pools</option>
+              <option value="Camping">Camping</option>
+              <option value="Farms">Farms</option>
+              <option value="Hill Station">Hill Station</option>
+              <option value="Arctic">Arctic</option>
+              <option value="Boats">Boats</option>
+            </select>
+          </div>
+
+          <div class="row">
+            <div class="mb-3 col-md-4">
+              <label for="price" class="form-label">Price</label>
+              <input type="number" value="<%= listElement.price %>" name="listing[price]" class="form-control" required>
+              <div class="invalid-feedback">
+                <p>Please enter valid price!</p>
+              </div>
+            </div>
+
+            <div class="mb-3 col-md-8">
+              <label for="country" class="form-label">Country</label>
+              <input type="text" value="<%= listElement.country %>" name="listing[country]" class="form-control"
+                required>
+              <div class="invalid-feedback">
+                <p>Please enter country!</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="location" class="form-label">Location</label>
+            <input type="text" value="<%= listElement.location %>" name="listing[location]" class="form-control"
+              required>
+            <div class="invalid-feedback">
+              <p>Please enter valid location!</p>
+            </div>
+          </div>
+
+          <button class="btn add-btn">Submit</button>
+        </form>
+      </div>
+    </div>
+  </body>

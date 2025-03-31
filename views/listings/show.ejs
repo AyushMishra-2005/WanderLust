@@ -1,0 +1,133 @@
+<% layout("/layouts/boilerplate") %>
+  <script>
+    let lat = "<%= lat %>";
+    let lon = "<%= lon %>";
+    let placeName = "<%= listElement.location %>";
+  </script>
+  <script src="/js/map.js"></script>
+  <body>
+    <%- include("../includes/flash.ejs") %>
+    <div class="row">
+      <div class="col col-8 offset-3 card-heading">
+        <h3>
+          <%= listElement.title %>
+        </h3>
+      </div>
+
+      <div class="col col-6 offset-3 show-card">
+        <div class="card card-listings">
+          <img src="<%= listElement.image.url %>" class="card-img-top show-image">
+          <div class="card-body">
+            <p class="card-text">
+              <b>
+                <i>
+                  Owned By : <%= listElement.owner.username %> <br>
+                </i>
+              </b>
+              <p>
+                <%= listElement.description %><br>
+                &#8377;<%= listElement.price.toLocaleString("en-IN") %><br>
+                <%= listElement.location %><br>
+                <%= listElement.country %>
+              </p>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      
+      
+      <% if(currUser && currUser._id.equals(listElement.owner._id)) { %>
+        <div class="btns">
+          <a href="/listings/<%= listElement._id %>/edit" class="btn btn-dark col-1 offset-3 add-btn">Edit</a>
+
+          <form action="/listings/<%= listElement._id %>?_method=DELETE" method="post">
+            <button class="btn btn-dark offset-4">Delete</button>
+          </form>
+        </div>
+      <% } %>
+
+      <div class="col col-6 offset-3">
+        <br>
+        <% if(currUser) { %>
+          <hr><br>
+          <h4>Leave a review</h4>
+          <form action="/listings/<%= listElement._id %>/reviews" method="post" novalidate class="needs-validation">
+            <div>
+              <div class="rating">
+                <input type="radio" id="star5" name="review[rating]" value="5">
+                <label for="star5">&#9733;</label>
+
+                <input type="radio" id="star4" name="review[rating]" value="4">
+                <label for="star4">&#9733;</label>
+
+                <input type="radio" id="star3" name="review[rating]" value="3">
+                <label for="star3">&#9733;</label>
+
+                <input type="radio" id="star2" name="review[rating]" value="2">
+                <label for="star2">&#9733;</label>
+
+                <input type="radio" id="star1" name="review[rating]" value="1">
+                <label for="star1">&#9733;</label>
+              </div>
+
+            </div>
+            <div>
+              <label for="comment" class="form-label"></label>
+              <textarea name="review[comment]" id="comment" cols="30" rows="5" class="form-control" required
+                placeholder="Enter a comment here!"></textarea>
+              <div class="valid-feedback">
+                <p>Description looks good!</p>
+              </div>
+              <div class="invalid-feedback">
+                <p>Please enter description for review!</p>
+              </div>
+            </div>
+            <br>
+            <button class="btn btn-outline-success offset-5">Submit</button>
+          </form>
+        <% } %>
+        
+
+        <hr>
+        <% if(listElement.reviews.length > 0) { %>
+          <h4>All Reviews</h4>
+          <div class="row">
+            <% for (let review of listElement.reviews) { %>
+              <div class="card col-8 mb-3 offset-2">
+                <div class="card-body">
+                    <h5 class="card-title"><%= review.author.username %></h5>
+                  <p class="card-text">
+                    <%= review.comment %>
+                  </p>
+                  <div class="review">
+                    <div class="stars" data-rating="<%= review.rating %>">
+                      <span class="star" data-value="1">&#9733;</span>
+                      <span class="star" data-value="2">&#9733;</span>
+                      <span class="star" data-value="3">&#9733;</span>
+                      <span class="star" data-value="4">&#9733;</span>
+                      <span class="star" data-value="5">&#9733;</span>
+                    </div>
+                  </div>
+                  <% if(currUser && review.author && review.author._id.equals(currUser._id)) { %>
+                    <form action="/listings/<%= listElement._id %>/reviews/<%= review._id %>?_method=DELETE" class="mb-3"
+                      method="post">
+                      <button class="btn btn-sm btn-outline-danger">Delete</button>
+                    </form>
+                  <% } %>
+                </div>
+              </div>
+            <% } %>
+          </div>
+        <% } %>
+      </div>
+
+      <div class="col col-6 offset-3 mt-4">
+        <h4>Where you'll be</h4>
+      </div>
+      
+      <div id="map" class="col col-6 offset-3 show-card"></div>
+    </div>
+
+  </body>
+
